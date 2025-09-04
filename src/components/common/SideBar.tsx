@@ -1,14 +1,17 @@
 import { Box, Drawer, Toolbar } from '@mui/material'
-import React from 'react'
+import React, { CSSProperties } from 'react'
 
 import Divider from '@mui/material/Divider';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
+// import InboxIcon from '@mui/icons-material/MoveToInbox';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import MailIcon from '@mui/icons-material/Mail';
+// import MailIcon from '@mui/icons-material/Mail';
+import HomeIcon from '@mui/icons-material/Home';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import { NavLink } from 'react-router-dom';
 
 interface SideBarProps {
     drawerWidth: number,
@@ -18,36 +21,55 @@ interface SideBarProps {
     handleDrawerTransitionEnd: () => void,
 }
 
+interface menuItem {
+    text: string,
+    path: string,
+    icon: React.ComponentType,
+}
+
 const SideBar = ({ drawerWidth, mobileOpen, handleDrawerToggle, handleDrawerClose, handleDrawerTransitionEnd }: SideBarProps) => {
+    const MenuItems: menuItem[] = [
+        { text: "Home", path: "/", icon: HomeIcon },
+        { text: "Report", path: "/report", icon: EqualizerIcon }
+    ]
+
+    const baseLinkStyle: CSSProperties = {
+        textDecoration: "none",
+        color: "inherit",
+        display: "block",
+    }
+
+    const activeLinkStyle: CSSProperties = {
+        backgroundColor: "rgba(0, 0, 0, 0.08)"
+    }
+
     const drawer = (
         <div>
             <Toolbar />
             <Divider />
             <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
+                {MenuItems.map((item, index) => (
+                    <NavLink key={index} to={item.path} style={({ isActive }) => {
+                        console.log("選択されたメニューは", item.text, isActive);
+                        return {
+                            ...baseLinkStyle,
+                            ...(isActive ? activeLinkStyle : {})
+                        }
+                    }}>
+                        <ListItem key={index} disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    {/* {index % 2 === 0 ? <InboxIcon /> : <MailIcon />} */}
+                                    <item.icon />
+                                </ListItemIcon>
+                                <ListItemText primary={item.text} />
+                            </ListItemButton>
+                        </ListItem>
+                    </NavLink>
+
                 ))}
             </List>
             <Divider />
-            {/* <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem key={text} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                            </ListItemIcon>
-                            <ListItemText primary={text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List> */}
         </div>
     );
 
