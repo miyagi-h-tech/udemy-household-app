@@ -6,4 +6,5 @@ export const theme = createTheme({
         fontWeightRegular: 400, // フォントウェイト400
         fontWeightMedium: 500, // フォントウェイト500
         fontWeightBold: 700, // フォントウェイト700
-    })
+    }
+})
