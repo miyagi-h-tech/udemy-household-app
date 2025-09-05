@@ -11,6 +11,8 @@ import { CssBaseline } from '@mui/material';
 import { Transaction } from './types/index';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
+import { format } from 'date-fns';
+import { formatMonth } from './utils/formattin';
 
 
 function App() {
@@ -24,6 +26,7 @@ function App() {
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  format(currentMonth, "yyyy-MM");
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -39,7 +42,6 @@ function App() {
           } as Transaction // as　型定義をしてすることで、配列内に定義している要素がid以外にも含まれていることを明示する
         })
 
-        console.log(transactionsData);
         setTransactions(transactionsData,);
       } catch (err) {
         //error
@@ -55,13 +57,19 @@ function App() {
 
   }, [])
 
+  const monthlyTransactions = transactions.filter((transaction) => {
+    return transaction.date.startsWith(formatMonth(currentMonth))
+  })
+
+  console.log(monthlyTransactions);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home />}></Route>
+            <Route index element={<Home monthlyTransactions={monthlyTransactions}/>}></Route>
             <Route path="/report" element={<Report />}></Route>
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
