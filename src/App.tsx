@@ -23,6 +23,7 @@ function App() {
   }
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -43,9 +44,7 @@ function App() {
       } catch (err) {
         //error
         if (isFireStoreError(err)) {
-          console.log(err);
-          console.log(err.message);
-          console.log(err.code);
+          console.log(`FireStoreの${err}`);
         } else {
           console.log(`一般的な${err}`);
         }
