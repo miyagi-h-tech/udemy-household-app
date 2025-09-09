@@ -4,12 +4,16 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Transaction } from '../types';
+import { financeCalculations } from '../utils/financeCalculations';
 
 interface MonthlySummaryProps {
     monthlyTransactions: Transaction[],
 }
 
 function MonthlySummary({ monthlyTransactions }: MonthlySummaryProps) {
+    console.log(monthlyTransactions);
+    const { income, expense, balance }
+        = financeCalculations(monthlyTransactions);
     return (
         <Grid container spacing={{ xs: 1, sm: 2 }} mb={2}>
             {/* 収入 */}
@@ -20,7 +24,7 @@ function MonthlySummary({ monthlyTransactions }: MonthlySummaryProps) {
                             <ArrowUpwardIcon sx={{ fontSize: "2rem" }} />
                             <Typography>収入</Typography>
                         </Stack>
-                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥300
+                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥{income}
 
                         </Typography>
                     </CardContent>
@@ -34,7 +38,7 @@ function MonthlySummary({ monthlyTransactions }: MonthlySummaryProps) {
                             <ArrowDownwardIcon sx={{ fontSize: "2rem" }} />
                             <Typography>支出</Typography>
                         </Stack>
-                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥300
+                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥{expense}
 
                         </Typography>
                     </CardContent>
@@ -48,7 +52,7 @@ function MonthlySummary({ monthlyTransactions }: MonthlySummaryProps) {
                             <AccountBalanceWalletIcon sx={{ fontSize: "2rem" }} />
                             <Typography>残高</Typography>
                         </Stack>
-                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥300
+                        <Typography textAlign={"right"} variant="h5" fontWeight={"fontWeightBold"} sx={{ wordBreak: "break-word", fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem" } }}>¥{balance}
 
                         </Typography>
                     </CardContent>
