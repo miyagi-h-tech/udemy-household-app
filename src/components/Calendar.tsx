@@ -3,16 +3,17 @@ import React from 'react'
 import dayGridPlugin from '@fullcalendar/daygrid';
 import jaLocal from '@fullcalendar/core/locales/ja';
 import "../calender.css"
-import { EventContentArg } from '@fullcalendar/core';
+import { DatesSetArg, EventContentArg } from '@fullcalendar/core';
 import { Balance, CalendarContent, Transaction } from '../types';
 import { calculateDailyBlances } from '../utils/financeCalculations';
 import { formatCurrency } from '../utils/formatting';
 
 interface ClandarProps {
-  monthlyTransactions: Transaction[]
+  monthlyTransactions: Transaction[],
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>
 }
 
-function Calender({ monthlyTransactions }: ClandarProps) {
+function Calender({ monthlyTransactions, setCurrentMonth }: ClandarProps) {
   const events = [
     { title: 'Meeting', start: new Date() }
   ]
@@ -35,7 +36,7 @@ function Calender({ monthlyTransactions }: ClandarProps) {
   }
 
   const calendarEvents = createCalendarEvents(dailyBalances);
-  console.log(calendarEvents);
+  // console.log(calendarEvents);
 
   const renderEventContent = (eventInfo: EventContentArg) => {
     return (
@@ -53,6 +54,10 @@ function Calender({ monthlyTransactions }: ClandarProps) {
     )
   }
 
+  const handleDateSet = (dateInfo: DatesSetArg) => {
+    setCurrentMonth(dateInfo.view.currentStart)
+  }
+
   return (
     <FullCalendar
       locale={jaLocal}
@@ -60,6 +65,7 @@ function Calender({ monthlyTransactions }: ClandarProps) {
       initialView='dayGridMonth'
       events={calendarEvents}
       eventContent={renderEventContent}
+      datesSet={handleDateSet}
     />
   )
 }

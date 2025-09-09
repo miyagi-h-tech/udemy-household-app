@@ -69,7 +69,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home monthlyTransactions={monthlyTransactions}/>}></Route>
+            <Route index element={<Home monthlyTransactions={monthlyTransactions} setCurrentMonth={setCurrentMonth}/>}></Route>
             <Route path="/report" element={<Report />}></Route>
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
