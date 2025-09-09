@@ -12,7 +12,7 @@ import { Transaction } from './types/index';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { formatMonth } from './utils/formattin';
+import { formatMonth } from './utils/formatting';
 
 
 function App() {
@@ -61,7 +61,7 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth))
   })
 
-  console.log(monthlyTransactions);
+  // console.log(monthlyTransactions);
 
   return (
     <ThemeProvider theme={theme}>
@@ -69,7 +69,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home monthlyTransactions={monthlyTransactions}/>}></Route>
+            <Route index element={<Home monthlyTransactions={monthlyTransactions} setCurrentMonth={setCurrentMonth}/>}></Route>
             <Route path="/report" element={<Report />}></Route>
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
