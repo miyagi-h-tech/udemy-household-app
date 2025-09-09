@@ -1,6 +1,6 @@
 import React from 'react'
 import MonthlySummary from '../components/MonthlySummary'
-import Calender from '../components/Calender'
+import Calendar from '../components/Calendar'
 import TransactionMenu from '../components/TransactionMenu'
 import TransactionForm from '../components/TransactionForm'
 import { Box } from '@mui/material'
@@ -16,7 +16,7 @@ const Home = ({ monthlyTransactions }: HomeProps) => {
       {/* 左側コンテンツ */}
       <Box sx={{ flexGrow: 1, }}>
         <MonthlySummary monthlyTransactions={monthlyTransactions} />
-        <Calender monthlyTransactions={monthlyTransactions} />
+        <Calendar monthlyTransactions={monthlyTransactions} />
       </Box>
       {/* 右側コンテンツ */}
       <Box>

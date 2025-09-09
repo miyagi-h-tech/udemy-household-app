@@ -12,7 +12,7 @@ import { Transaction } from './types/index';
 import { db } from './firebase';
 import { collection, getDocs } from 'firebase/firestore';
 import { format } from 'date-fns';
-import { formatMonth } from './utils/formattin';
+import { formatMonth } from './utils/formatting';
 
 
 function App() {
@@ -61,7 +61,7 @@ function App() {
     return transaction.date.startsWith(formatMonth(currentMonth))
   })
 
-  console.log(monthlyTransactions);
+  // console.log(monthlyTransactions);
 
   return (
     <ThemeProvider theme={theme}>

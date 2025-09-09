@@ -50,7 +50,7 @@ const SideBar = ({ drawerWidth, mobileOpen, handleDrawerToggle, handleDrawerClos
             <List>
                 {MenuItems.map((item, index) => (
                     <NavLink key={index} to={item.path} style={({ isActive }) => {
-                        console.log("選択されたメニューは", item.text, isActive);
+                        // console.log("選択されたメニューは", item.text, isActive);
                         return {
                             ...baseLinkStyle,
                             ...(isActive ? activeLinkStyle : {})
