@@ -9,15 +9,17 @@ import { calculateDailyBlances } from '../utils/financeCalculations';
 import { formatCurrency } from '../utils/formatting';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 import { useTheme } from "@mui/material";
+import { isSameMonth } from 'date-fns';
 
 interface ClandarProps {
   monthlyTransactions: Transaction[],
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
   currentDay: string;
+  today: string,
 }
 
-function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, currentDay }: ClandarProps) {
+function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, currentDay, today }: ClandarProps) {
   const theme = useTheme();
   const events = [
     { title: 'Meeting', start: new Date() }
@@ -65,7 +67,13 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, current
   }
 
   const handleDateSet = (dateInfo: DatesSetArg) => {
-    setCurrentMonth(dateInfo.view.currentStart)
+    const currentMonth = dateInfo.view.currentStart;
+    setCurrentMonth(currentMonth);
+    const todayDate = new Date();
+    if (isSameMonth(todayDate, currentMonth)) {
+      setCurrentDay(today);
+    }
+    // setCurrentDay(today);
   };
 
   const handleDateClick = (dateInfo: DateClickArg) => {
