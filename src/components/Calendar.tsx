@@ -8,14 +8,17 @@ import { Balance, CalendarContent, Transaction } from '../types';
 import { calculateDailyBlances } from '../utils/financeCalculations';
 import { formatCurrency } from '../utils/formatting';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
+import { useTheme } from "@mui/material";
 
 interface ClandarProps {
   monthlyTransactions: Transaction[],
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
+  currentDay: string;
 }
 
-function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay }: ClandarProps) {
+function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, currentDay }: ClandarProps) {
+  const theme = useTheme();
   const events = [
     { title: 'Meeting', start: new Date() }
   ]
@@ -38,7 +41,12 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay }: Cland
   }
 
   const calendarEvents = createCalendarEvents(dailyBalances);
-  // console.log(calendarEvents);
+
+  const backgroundCEvent = {
+    start: currentDay,
+    display: "background",
+    backgroundColor: "theme.palette.incomeColor.light"
+  };
 
   const renderEventContent = (eventInfo: EventContentArg) => {
     return (
@@ -69,7 +77,7 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay }: Cland
       locale={jaLocal}
       plugins={[dayGridPlugin, interactionPlugin]}
       initialView='dayGridMonth'
-      events={calendarEvents}
+      events={[...calendarEvents, backgroundCEvent]}
       eventContent={renderEventContent}
       datesSet={handleDateSet}
       dateClick={handleDateClick}
