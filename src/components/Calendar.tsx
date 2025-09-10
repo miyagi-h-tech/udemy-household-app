@@ -7,13 +7,15 @@ import { DatesSetArg, EventContentArg } from '@fullcalendar/core';
 import { Balance, CalendarContent, Transaction } from '../types';
 import { calculateDailyBlances } from '../utils/financeCalculations';
 import { formatCurrency } from '../utils/formatting';
+import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
 
 interface ClandarProps {
   monthlyTransactions: Transaction[],
-  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>
+  setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+  setCurrentDay: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function Calender({ monthlyTransactions, setCurrentMonth }: ClandarProps) {
+function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay }: ClandarProps) {
   const events = [
     { title: 'Meeting', start: new Date() }
   ]
@@ -56,18 +58,23 @@ function Calender({ monthlyTransactions, setCurrentMonth }: ClandarProps) {
 
   const handleDateSet = (dateInfo: DatesSetArg) => {
     setCurrentMonth(dateInfo.view.currentStart)
-  }
+  };
+
+  const handleDateClick = (dateInfo: DateClickArg) => {
+    setCurrentDay(dateInfo.dateStr);
+  };
 
   return (
     <FullCalendar
       locale={jaLocal}
-      plugins={[dayGridPlugin]}
+      plugins={[dayGridPlugin, interactionPlugin]}
       initialView='dayGridMonth'
       events={calendarEvents}
       eventContent={renderEventContent}
       datesSet={handleDateSet}
+      dateClick={handleDateClick}
     />
   )
 }
 
-export default Calender
+export default Calendar
