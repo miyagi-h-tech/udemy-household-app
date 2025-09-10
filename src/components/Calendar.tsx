@@ -21,9 +21,9 @@ interface ClandarProps {
 
 function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, currentDay, today }: ClandarProps) {
   const theme = useTheme();
-  const events = [
-    { title: 'Meeting', start: new Date() }
-  ]
+  // const events = [
+  //   { title: 'Meeting', start: new Date() }
+  // ]
 
   // 1.日付ごとの修正を計算する関数
   const dailyBalances = calculateDailyBlances(monthlyTransactions);
@@ -44,10 +44,10 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, current
 
   const calendarEvents = createCalendarEvents(dailyBalances);
 
-  const backgroundCEvent = {
+  const backgroundEvent = {
     start: currentDay,
     display: "background",
-    backgroundColor: "theme.palette.incomeColor.light"
+    backgroundColor: theme.palette.incomeColor.light
   };
 
   const renderEventContent = (eventInfo: EventContentArg) => {
@@ -73,7 +73,6 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, current
     if (isSameMonth(todayDate, currentMonth)) {
       setCurrentDay(today);
     }
-    // setCurrentDay(today);
   };
 
   const handleDateClick = (dateInfo: DateClickArg) => {
@@ -85,7 +84,7 @@ function Calendar({ monthlyTransactions, setCurrentMonth, setCurrentDay, current
       locale={jaLocal}
       plugins={[dayGridPlugin, interactionPlugin]}
       initialView='dayGridMonth'
-      events={[...calendarEvents, backgroundCEvent]}
+      events={[...calendarEvents, backgroundEvent]}
       eventContent={renderEventContent}
       datesSet={handleDateSet}
       dateClick={handleDateClick}
