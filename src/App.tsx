@@ -10,9 +10,10 @@ import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { Transaction } from './types/index';
 import { db } from './firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, addDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
+import { Schema } from './validations/schema';
 
 
 function App() {
@@ -57,9 +58,26 @@ function App() {
 
   }, [])
 
+  // ひと月文のデータのみ取得
   const monthlyTransactions = transactions.filter((transaction) => {
     return transaction.date.startsWith(formatMonth(currentMonth))
   })
+
+  const handleSaveTransaction = async (transaction: Schema) => {
+    console.log(transaction);
+    try {
+      // Add a new document with a generated id.
+      const docRef = await addDoc(collection(db, "Transactions"), transaction);
+      console.log("Document written with ID: ", docRef.id);
+    } catch (err) {
+      //error
+      if (isFireStoreError(err)) {
+        console.log(`FireStoreの${err}`);
+      } else {
+        console.log(`一般的な${err}`);
+      }
+    }
+  }
 
   // console.log(monthlyTransactions);
 
@@ -69,7 +87,15 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<AppLayout />}>
-            <Route index element={<Home monthlyTransactions={monthlyTransactions} setCurrentMonth={setCurrentMonth}/>}></Route>
+            <Route
+              index
+              element={
+                <Home
+                  monthlyTransactions={monthlyTransactions}
+                  setCurrentMonth={setCurrentMonth}
+                  onSaveTransaction={handleSaveTransaction}
+                />}>
+            </Route>
             <Route path="/report" element={<Report />}></Route>
             <Route path="*" element={<NoMatch />}></Route>
           </Route>

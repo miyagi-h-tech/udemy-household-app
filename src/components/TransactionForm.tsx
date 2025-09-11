@@ -20,7 +20,7 @@ import TrainIcon from "@mui/icons-material/Train";
 import WorkIcon from "@mui/icons-material/Work";
 import SavingsIcon from "@mui/icons-material/Savings";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Schema, transactionSchema } from "../validations/schema";
@@ -30,6 +30,7 @@ interface TransactionFormProps {
   onCloseForm: () => void,
   isEntryDrowerOpen: boolean,
   currentDay: string,
+  onSaveTransaction: (transaction: Schema) => Promise<void>
 }
 
 type IncomeExpense = "income" | "expense";
@@ -39,7 +40,7 @@ interface CategoryItem {
   icon: JSX.Element
 }
 
-const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: TransactionFormProps) => {
+const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction }: TransactionFormProps) => {
   const formWidth = 320;
 
   const expenseCategories: CategoryItem[] = [
@@ -69,24 +70,28 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
     resolver: zodResolver(transactionSchema),
   });
 
+  // 収支タイプを切り替える関数
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue("type", type);
   }
 
+  //カレンダー上の選択した日付を取得してセット
+  useEffect(() => {
+    setValue("date", currentDay);
+  }, [currentDay]);
+
   // 収支タイプを監視
   const currentType = watch("type");
 
+  //収支タイプに応じたカテゴリを取得
   useEffect(() => {
     const newCategories = currentType === "expense" ? expenseCategories : icomeCategories;
     setCategories(newCategories);
   }, [currentType]);
 
-  useEffect(() => {
-    setValue("date", currentDay);
-  }, [currentDay]);
-
-  const onSubmit = (data: any) => {
-    console.log(data)
+  // 送信処理
+  const onSubmit: SubmitHandler<Schema> = (data) => {
+    onSaveTransaction(data);
   }
 
   return (
