@@ -59,7 +59,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
   ];
 
   const [categories, setCategories] = useState(expenseCategories)
-  const { control, setValue, watch, formState: { errors }, handleSubmit } = useForm<Schema>({
+  const { control, setValue, watch, formState: { errors }, handleSubmit, reset } = useForm<Schema>({
     defaultValues: {
       type: "expense",
       date: currentDay,
@@ -73,6 +73,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
   // 収支タイプを切り替える関数
   const incomeExpenseToggle = (type: IncomeExpense) => {
     setValue("type", type);
+    setValue("category", "");
   }
 
   //カレンダー上の選択した日付を取得してセット
@@ -92,7 +93,15 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
   // 送信処理
   const onSubmit: SubmitHandler<Schema> = (data) => {
     onSaveTransaction(data);
-  }
+    // 内訳フォームをリセット
+    reset({
+      type: "expense",
+      date: currentDay,
+      amount: 0,
+      category: "",
+      content: "",
+    });
+  };
 
   return (
     <Box

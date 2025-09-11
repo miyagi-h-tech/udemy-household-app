@@ -75,7 +75,7 @@ function App() {
         ...transaction,
       } as Transaction;
       console.log(newTransactions);
-      setTransactions([...transactions, newTransactions]);
+      setTransactions((prevTansactions) => [...prevTansactions, newTransactions]);
     } catch (err) {
       //error
       if (isFireStoreError(err)) {
