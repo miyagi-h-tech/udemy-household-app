@@ -28,11 +28,16 @@ const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction, selecte
 
   const closeForm = () => {
     setIsEntryDrowerOpen(!isEntryDrowerOpen)
+    setSelectedTransaction(null);
   }
 
   // フォームの開閉処理
   const handleAddTransactionForm = () => {
-    setIsEntryDrowerOpen(!isEntryDrowerOpen);
+    if (selectedTransaction) {
+      setSelectedTransaction(null);
+    } else {
+      setIsEntryDrowerOpen(!isEntryDrowerOpen);
+    }
   }
 
   //取引が選択されたときの処理
