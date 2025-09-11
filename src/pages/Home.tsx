@@ -11,10 +11,12 @@ import { Schema } from '../validations/schema'
 interface HomeProps {
   monthlyTransactions: Transaction[];
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
-  onSaveTransaction: (transaction: Schema) => Promise<void>
+  onSaveTransaction: (transaction: Schema) => Promise<void>;
+  selectedTransaction: Transaction | null;
+  setSelectedTransaction: React.Dispatch<React.SetStateAction<Transaction | null>>
 }
 
-const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction }: HomeProps) => {
+const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction, selectedTransaction, setSelectedTransaction }: HomeProps) => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [currentDay, setCurrentDay] = useState(today);
   const [isEntryDrowerOpen, setIsEntryDrowerOpen] = useState(false);
@@ -31,6 +33,12 @@ const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction }: HomeP
   // フォームの開閉処理
   const handleAddTransactionForm = () => {
     setIsEntryDrowerOpen(!isEntryDrowerOpen);
+  }
+
+  //取引が選択されたときの処理
+  const handleSelectTransaction = (transaction: Transaction) => {
+    setIsEntryDrowerOpen(true);
+    setSelectedTransaction(transaction);
   }
 
   return (
@@ -53,12 +61,14 @@ const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction }: HomeP
           dailyTransactions={dailyTransactions}
           currentDay={currentDay}
           onAddTransactionForm={handleAddTransactionForm}
+          onSelectTransaction={handleSelectTransaction}
         />
         <TransactionForm
           isEntryDrowerOpen={isEntryDrowerOpen}
           onCloseForm={closeForm}
           currentDay={currentDay}
           onSaveTransaction={onSaveTransaction}
+          selectedTransaction={selectedTransaction}
         />
       </Box>
     </Box>

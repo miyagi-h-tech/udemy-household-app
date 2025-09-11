@@ -24,13 +24,15 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from '../types';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Schema, transactionSchema } from "../validations/schema";
+import { Transaction } from '../types'
 
 
 interface TransactionFormProps {
   onCloseForm: () => void,
   isEntryDrowerOpen: boolean,
   currentDay: string,
-  onSaveTransaction: (transaction: Schema) => Promise<void>
+  onSaveTransaction: (transaction: Schema) => Promise<void>,
+  selectedTransaction: Transaction | null,
 }
 
 type IncomeExpense = "income" | "expense";
@@ -40,7 +42,7 @@ interface CategoryItem {
   icon: JSX.Element
 }
 
-const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction }: TransactionFormProps) => {
+const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction, selectedTransaction }: TransactionFormProps) => {
   const formWidth = 320;
 
   const expenseCategories: CategoryItem[] = [
@@ -102,6 +104,17 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
       content: "",
     });
   };
+
+  //
+  useEffect(() => {
+    if (selectedTransaction) {
+      setValue("type", selectedTransaction.type);
+      setValue("date", selectedTransaction.date);
+      setValue("amount", selectedTransaction.amount);
+      setValue("category", selectedTransaction.category);
+      setValue("content", selectedTransaction.content);
+    }
+  }, [selectedTransaction]);
 
   return (
     <Box
