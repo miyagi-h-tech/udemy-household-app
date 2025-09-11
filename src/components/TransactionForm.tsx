@@ -22,6 +22,9 @@ import SavingsIcon from "@mui/icons-material/Savings";
 import AddBusinessIcon from "@mui/icons-material/AddBusiness";
 import { Controller, useForm } from "react-hook-form";
 import { ExpenseCategory, IncomeCategory } from '../types';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Schema, transactionSchema } from "../validations/schema";
+
 
 interface TransactionFormProps {
   onCloseForm: () => void,
@@ -55,14 +58,15 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
   ];
 
   const [categories, setCategories] = useState(expenseCategories)
-  const { control, setValue, watch } = useForm({
+  const { control, setValue, watch, formState: { errors } } = useForm<Schema>({
     defaultValues: {
       type: "expense",
       date: currentDay,
       amount: 0,
       category: "",
       content: "",
-    }
+    },
+    resolver: zodResolver(transactionSchema),
   });
 
   const incomeExpenseToggle = (type: IncomeExpense) => {
@@ -170,7 +174,16 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
             name="amount"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="金額" type="number" />
+              <TextField
+                {...field}
+                value={field.value === 0 ? "" : field.value}
+                onChange={(e) => {
+                  const newValue = parseInt(e.target.value, 10) || 0;
+                  field.onChange(newValue);
+                }}
+                label="金額"
+                type="number"
+              />
             )}
           />
           {/* 内容 */}
