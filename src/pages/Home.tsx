@@ -15,11 +15,21 @@ interface HomeProps {
 const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [currentDay, setCurrentDay] = useState(today);
+  const [isEntryDrowerOpen, setIsEntryDrowerOpen] = useState(false);
 
   // カレンダーで選択した日付のデータをfilterで取得
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
     return transaction.date === currentDay
   });
+
+  const closeForm = () => {
+    setIsEntryDrowerOpen(!isEntryDrowerOpen)
+  }
+
+  // フォームの開閉処理
+  const handleAddTransactionForm = () => {
+    setIsEntryDrowerOpen(!isEntryDrowerOpen);
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -39,8 +49,14 @@ const Home = ({ monthlyTransactions, setCurrentMonth }: HomeProps) => {
       <Box>
         <TransactionMenu
           dailyTransactions={dailyTransactions}
-          currentDay={currentDay} />
-        <TransactionForm />
+          currentDay={currentDay}
+          onAddTransactionForm={handleAddTransactionForm}
+        />
+        <TransactionForm
+          isEntryDrowerOpen={isEntryDrowerOpen}
+          onCloseForm={closeForm}
+          currentDay={currentDay}
+        />
       </Box>
     </Box>
   )
