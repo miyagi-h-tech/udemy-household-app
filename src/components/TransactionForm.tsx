@@ -58,7 +58,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
   ];
 
   const [categories, setCategories] = useState(expenseCategories)
-  const { control, setValue, watch, formState: { errors } } = useForm<Schema>({
+  const { control, setValue, watch, formState: { errors }, handleSubmit } = useForm<Schema>({
     defaultValues: {
       type: "expense",
       date: currentDay,
@@ -84,6 +84,10 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
   useEffect(() => {
     setValue("date", currentDay);
   }, [currentDay]);
+
+  const onSubmit = (data: any) => {
+    console.log(data)
+  }
 
   return (
     <Box
@@ -119,7 +123,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
         </IconButton>
       </Box>
       {/* フォーム要素 */}
-      <Box component={"form"}>
+      <Box component={"form"} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={2}>
           {/* 収支切り替えボタン */}
           <Controller
@@ -149,6 +153,8 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
                 InputLabelProps={{
                   shrink: true,
                 }}
+                error={!!errors.date}
+                helperText={errors.date?.message}
               />
             )}
           />
@@ -157,9 +163,16 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
             name="category"
             control={control}
             render={({ field }) => (
-              <TextField {...field} id="カテゴリ" label="カテゴリ" select>
-                {categories.map((category) => (
-                  <MenuItem value={category.label}>
+              <TextField
+                {...field}
+                id="カテゴリ"
+                label="カテゴリ"
+                select
+                error={!!errors.category}
+                helperText={errors.category?.message}
+              >
+                {categories.map((category, index) => (
+                  <MenuItem value={category.label} key={index}>
                     <ListItemIcon>
                       {category.icon}
                     </ListItemIcon>
@@ -183,6 +196,8 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
                 }}
                 label="金額"
                 type="number"
+                error={!!errors.amount}
+                helperText={errors.amount?.message}
               />
             )}
           />
@@ -191,7 +206,13 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay }: Transac
             name="content"
             control={control}
             render={({ field }) => (
-              <TextField {...field} label="内容" type="text" />
+              <TextField
+                {...field}
+                label="内容"
+                type="text"
+                error={!!errors.content}
+                helperText={errors.content?.message}
+              />
             )}
           />
           {/* 保存ボタン */}
