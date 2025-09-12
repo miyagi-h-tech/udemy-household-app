@@ -33,6 +33,8 @@ interface TransactionFormProps {
   currentDay: string,
   onSaveTransaction: (transaction: Schema) => Promise<void>,
   selectedTransaction: Transaction | null,
+  onDeleteTransaction: (transactionId: string) => Promise<void>
+  setSelectedTransaction: (value: React.SetStateAction<Transaction | null>) => void;
 }
 
 type IncomeExpense = "income" | "expense";
@@ -42,7 +44,7 @@ interface CategoryItem {
   icon: JSX.Element
 }
 
-const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction, selectedTransaction }: TransactionFormProps) => {
+const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction, selectedTransaction, onDeleteTransaction, setSelectedTransaction }: TransactionFormProps) => {
   const formWidth = 320;
 
   const expenseCategories: CategoryItem[] = [
@@ -123,6 +125,13 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
       });
     }
   }, [selectedTransaction]);
+
+  const handleDelete = () => {
+    if (selectedTransaction) {
+      onDeleteTransaction(selectedTransaction.id);
+      setSelectedTransaction(null);
+    }
+  }
 
   return (
     <Box
@@ -254,9 +263,16 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
           <Button type="submit" variant="contained" color={currentType === "income" ? "primary" : "error"} fullWidth>
             保存
           </Button>
+          {/* 保存ボタン */}
+          {selectedTransaction && (
+            <Button
+              onClick={handleDelete}
+              variant="outlined" color={"secondary"} fullWidth>
+              削除
+            </Button>)}
         </Stack>
       </Box>
-    </Box>
+    </Box >
   );
 };
 export default TransactionForm;

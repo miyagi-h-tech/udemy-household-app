@@ -12,14 +12,14 @@ interface HomeProps {
   monthlyTransactions: Transaction[];
   setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
   onSaveTransaction: (transaction: Schema) => Promise<void>;
-  selectedTransaction: Transaction | null;
-  setSelectedTransaction: React.Dispatch<React.SetStateAction<Transaction | null>>
+  onDeleteTransaction: (transactionId: string) => Promise<void>
 }
 
-const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction, selectedTransaction, setSelectedTransaction }: HomeProps) => {
+const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction, onDeleteTransaction }: HomeProps) => {
   const today = format(new Date(), "yyyy-MM-dd");
   const [currentDay, setCurrentDay] = useState(today);
   const [isEntryDrowerOpen, setIsEntryDrowerOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
 
   // カレンダーで選択した日付のデータをfilterで取得
   const dailyTransactions = monthlyTransactions.filter((transaction) => {
@@ -74,6 +74,8 @@ const Home = ({ monthlyTransactions, setCurrentMonth, onSaveTransaction, selecte
           currentDay={currentDay}
           onSaveTransaction={onSaveTransaction}
           selectedTransaction={selectedTransaction}
+          onDeleteTransaction={onDeleteTransaction}
+          setSelectedTransaction={setSelectedTransaction}
         />
       </Box>
     </Box>
