@@ -10,7 +10,7 @@ import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { Transaction } from './types/index';
 import { db } from './firebase';
-import { collection, getDocs, addDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import { formatMonth } from './utils/formatting';
 import { Schema } from './validations/schema';
@@ -87,13 +87,14 @@ function App() {
     }
   }
 
+  // 取引を削除する
   const handleDeleteTransaction = async (transactionId: string) => {
     // firestoreのデータ削除
     try {
       await deleteDoc(doc(db, "Transactions", transactionId));
       // 削除したID以外の取引データを抽出
       const filterdTransactions = transactions.filter((transaction) => transaction.id !== transactionId);
-      
+
       // 格納
       setTransactions(filterdTransactions);
     } catch (err) {
@@ -106,7 +107,29 @@ function App() {
     }
   }
 
-  // console.log(monthlyTransactions);
+  // 更新を更新する
+  const handleUpdateTransaction = async (
+    transaction: Schema,
+    transactionId: string) => {
+    try {
+      // 更新処理
+      const docRef = doc(db, "Transactions", transactionId);
+      // Set the "capital" field of the city 'DC'
+      await updateDoc(docRef, transaction);
+
+      // フロント更新
+      const updatedTransactions = transactions.map((t) => t.id === transactionId ? { ...t, ...transaction } : t) as Transaction[];
+
+      setTransactions(updatedTransactions);
+    } catch (err) {
+      //error
+      if (isFireStoreError(err)) {
+        console.log(`FireStoreの${err}`);
+      } else {
+        console.log(`一般的な${err}`);
+      }
+    }
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -122,6 +145,7 @@ function App() {
                   setCurrentMonth={setCurrentMonth}
                   onSaveTransaction={handleSaveTransaction}
                   onDeleteTransaction={handleDeleteTransaction}
+                  onUpdateTransaction={handleUpdateTransaction}
                 />}>
             </Route>
             <Route path="/report" element={<Report />}></Route>

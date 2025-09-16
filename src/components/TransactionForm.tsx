@@ -35,6 +35,7 @@ interface TransactionFormProps {
   selectedTransaction: Transaction | null,
   onDeleteTransaction: (transactionId: string) => Promise<void>
   setSelectedTransaction: (value: React.SetStateAction<Transaction | null>) => void;
+  onUpdateTransaction: (Transaction: Schema, transactionId: string) => Promise<void>;
 }
 
 type IncomeExpense = "income" | "expense";
@@ -44,7 +45,7 @@ interface CategoryItem {
   icon: JSX.Element
 }
 
-const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction, selectedTransaction, onDeleteTransaction, setSelectedTransaction }: TransactionFormProps) => {
+const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTransaction, selectedTransaction, onDeleteTransaction, setSelectedTransaction, onUpdateTransaction }: TransactionFormProps) => {
   const formWidth = 320;
 
   const expenseCategories: CategoryItem[] = [
@@ -96,7 +97,24 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
 
   // 送信処理
   const onSubmit: SubmitHandler<Schema> = (data) => {
-    onSaveTransaction(data);
+    if (selectedTransaction) {
+      onUpdateTransaction(data, selectedTransaction.id)
+        .then(() => {
+          setSelectedTransaction(null);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    } else {
+      onSaveTransaction(data)
+        .then(() => {
+          setSelectedTransaction(null);
+        })
+        .catch((error) => {
+          console.error(error);
+        })
+    }
+
     // 内訳フォームをリセット
     reset({
       type: "expense",
@@ -261,7 +279,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
           />
           {/* 保存ボタン */}
           <Button type="submit" variant="contained" color={currentType === "income" ? "primary" : "error"} fullWidth>
-            保存
+            {selectedTransaction ? "更新" : "保存"}
           </Button>
           {/* 保存ボタン */}
           {selectedTransaction && (
