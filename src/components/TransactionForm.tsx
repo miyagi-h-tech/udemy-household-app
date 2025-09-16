@@ -125,7 +125,17 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
     });
   };
 
-  //
+  // 収支タイプの違いう取引を選択したときに、カテゴリーを更新する
+  useEffect(() => {
+    // 選択氏が更新されたか確認
+    if (selectedTransaction) {
+      const categoryExists = categories.some((category) => category.label === selectedTransaction.category);
+      // カテゴリーを格納
+      setValue("category", categoryExists ? selectedTransaction.category : "");
+    }
+  }, [selectedTransaction, categories]);
+
+  // フォーム内容更新
   useEffect(() => {
     if (selectedTransaction) {
       setValue("type", selectedTransaction.type);
