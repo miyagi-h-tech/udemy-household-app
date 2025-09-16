@@ -23,10 +23,11 @@ import IconComponents from "./common/IconComponents";
 interface TransactionMenuProps {
   dailyTransactions: Transaction[];
   currentDay: string;
-  onAddTransactionForm: () => void,
+  onAddTransactionForm: () => void;
+  onSelectTransaction: (transaction: Transaction) => void;
 }
 
-const TransactionMenu = ({ dailyTransactions, currentDay, onAddTransactionForm }: TransactionMenuProps) => {
+const TransactionMenu = ({ dailyTransactions, currentDay, onAddTransactionForm, onSelectTransaction }: TransactionMenuProps) => {
   const menuDrawerWidth = 320;
   return (
     <Drawer
@@ -65,12 +66,13 @@ const TransactionMenu = ({ dailyTransactions, currentDay, onAddTransactionForm }
             内訳を追加
           </Button>
         </Box>
+        {/* 取引一覧 */}
         <Box sx={{ flexGrow: 1, overflowY: "auto" }}>
           <List aria-label="取引履歴">
             <Stack spacing={2}>
               {dailyTransactions.map((transaction) => (
 
-                <ListItem disablePadding>
+                <ListItem disablePadding key={transaction.id}>
                   <Card
                     sx={{
                       width: "100%",
@@ -78,6 +80,7 @@ const TransactionMenu = ({ dailyTransactions, currentDay, onAddTransactionForm }
                         theme.palette.incomeColor.light : (theme) =>
                         theme.palette.expenseColor.light,
                     }}
+                    onClick={() => onSelectTransaction(transaction)}
                   >
                     <CardActionArea>
                       <CardContent>
