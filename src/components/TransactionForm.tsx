@@ -226,7 +226,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
                   shrink: true,
                 }}
                 error={!!errors.date}
-                helperText={errors.date?.message}
+                helperText={errors.date?.message as string}
               />
             )}
           />
@@ -241,7 +241,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
                 label="カテゴリ"
                 select
                 error={!!errors.category}
-                helperText={errors.category?.message}
+                helperText={errors.category?.message as string}
               >
                 {categories.map((category, index) => (
                   <MenuItem value={category.label} key={index}>
@@ -269,7 +269,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
                 label="金額"
                 type="number"
                 error={!!errors.amount}
-                helperText={errors.amount?.message}
+                helperText={errors.amount?.message as string}
               />
             )}
           />
@@ -283,7 +283,7 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
                 label="内容"
                 type="text"
                 error={!!errors.content}
-                helperText={errors.content?.message}
+                helperText={errors.content?.message as string}
               />
             )}
           />
