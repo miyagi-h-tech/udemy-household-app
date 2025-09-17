@@ -3,16 +3,58 @@ import React from 'react'
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { ja } from "date-fns/locale";
+import { addMonths } from 'date-fns';
 
-const MonthSelector = () => {
+interface MonthSelectorProprs {
+    currentMonth: Date;
+    setCurrentMonth: React.Dispatch<React.SetStateAction<Date>>;
+}
+
+const MonthSelector = ({ currentMonth, setCurrentMonth }: MonthSelectorProprs) => {
+
+
+    const hanleDateChange = (newDate: Date | null) => {
+        if(newDate){
+            setCurrentMonth(newDate);
+        }
+    }
+
+    // 先月ボタンを押したときの処理
+    const handlePreviousMonth = () => {
+        const previousMonth = addMonths(currentMonth, -1);
+        setCurrentMonth(previousMonth);
+    }
+
+    // 次月ボタンを押したときの処理
+    const handleNextMonth = () => {
+        const previousMonth = addMonths(currentMonth, +1);
+        setCurrentMonth(previousMonth);
+    }
+
     return (
-        <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={ja}>
+        <LocalizationProvider
+            dateAdapter={AdapterDateFns}
+            adapterLocale={ja}
+        // dateFormats={{ month: "yyyy年MM月" }}
+        >
             <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <Button color={"error"} variant="contained">
+                <Button onClick={handlePreviousMonth} color={"error"} variant="contained">
                     先月
                 </Button>
-                <DatePicker sx={{ mx: 2 }} />
-                <Button color={"primary"} variant="contained">
+                <DatePicker
+                    onChange={hanleDateChange}
+                    value={currentMonth}
+                    label="年月を選択"
+                    sx={{ mx: 2, background: "white" }}
+                    views={["year", "month"]}
+                    format={"yyyy/MM"}
+                    slotProps={{
+                        toolbar: {
+                            toolbarFormat: "yyyy年MM月"
+                        }
+                    }}
+                />
+                <Button onClick={handleNextMonth} color={"primary"} variant="contained">
                     次月
                 </Button>
             </Box>
