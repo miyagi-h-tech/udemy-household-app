@@ -27,6 +27,7 @@ function App() {
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(true);
 
   format(currentMonth, "yyyy-MM");
 
@@ -34,14 +35,13 @@ function App() {
     const fetchTransactions = async () => {
 
       try {
-
         const querySnapshot = await getDocs(collection(db, "Transactions"))
         const transactionsData = querySnapshot.docs.map((doc) => {
           // console.log(doc.id, " => ", doc.data());
           return {
             ...doc.data(),
             id: doc.id
-          } as Transaction // as　型定義をしてすることで、配列内に定義している要素がid以外にも含まれていることを明示する
+          } as Transaction // as　型定義をすることで、配列内に定義している要素がid以外にも含まれていることを明示する
         })
 
         setTransactions(transactionsData,);
@@ -52,6 +52,8 @@ function App() {
         } else {
           console.log(`一般的な${err}`);
         }
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -153,6 +155,7 @@ function App() {
                   currentMonth={currentMonth}
                   setCurrentMonth={setCurrentMonth}
                   monthlyTransactions={monthlyTransactions}
+                  isLoading={isLoading}
                 />} />
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
