@@ -23,6 +23,7 @@ import { visuallyHidden } from '@mui/utils';
 import { financeCalculations } from '../utils/financeCalculations';
 import { Transaction } from '../types';
 import { Grid } from '@mui/material';
+import { formatCurrency } from "../utils/formatting";
 
 interface Data {
   id: number;
@@ -253,10 +254,17 @@ interface FinancialItemProps {
 
 function FinancialItem({ title, value, color }: FinancialItemProps) {
   return (
-    <Grid size={{ xs: 6 }}>
-      <Typography>{title}</Typography>
-      <Typography sx={{ color: color }}>
-        ￥{value}
+    <Grid size={{ xs: 4 }} textAlign={"center"}>
+      <Typography
+        variant="subtitle1"
+        component={"div"}>
+        {title}
+      </Typography>
+      <Typography
+        component={"span"}
+        fontWeight={"fontWeightBold"}
+        sx={{ color: color, fontSize: { xs: ".8rem", sm: "1rem", md: "1.2rem", wordBreak: "break-word" } }}>
+        ￥{formatCurrency(value)}
       </Typography>
     </Grid>)
 }
@@ -343,7 +351,7 @@ export default function TransactionTable({ monthlyTransactions }: TransactionTab
     <Box sx={{ width: '100%' }}>
       <Paper sx={{ width: '100%', mb: 2 }}>
 
-        <Grid container>
+        <Grid container sx={{ borderBottom: "1px solid rgba(224, 224, 224, 1" }}>
           <FinancialItem
             title={"支出"}
             value={expense}
