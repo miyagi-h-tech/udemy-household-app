@@ -146,8 +146,7 @@ function App() {
                   onSaveTransaction={handleSaveTransaction}
                   onDeleteTransaction={handleDeleteTransaction}
                   onUpdateTransaction={handleUpdateTransaction}
-                />}>
-            </Route>
+                />} />
             <Route path="/report" element={<Report />}></Route>
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
