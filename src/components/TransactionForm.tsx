@@ -2,9 +2,13 @@ import {
   Box,
   Button,
   ButtonGroup,
+  FormControl,
+  FormHelperText,
   IconButton,
+  InputLabel,
   ListItemIcon,
   MenuItem,
+  Select,
   Stack,
   TextField,
   Typography,
@@ -235,23 +239,49 @@ const TransactionForm = ({ onCloseForm, isEntryDrowerOpen, currentDay, onSaveTra
             name="category"
             control={control}
             render={({ field }) => (
-              <TextField
-                {...field}
-                id="カテゴリ"
-                label="カテゴリ"
-                select
+              // <TextField
+              //   {...field}
+              //   id="カテゴリ"
+              //   label="カテゴリ"
+              //   select
+              //   error={!!errors.category}
+              //   helperText={errors.category?.message as string}
+              //   InputLabelProps={{
+              //     htmlFor: "category",
+              //   }}
+              //   inputProps={{ id: "category" }}
+              // >
+              //   {categories.map((category, index) => (
+              //     <MenuItem value={category.label} key={index}>
+              //       <ListItemIcon>
+              //         {category.icon}
+              //       </ListItemIcon>
+              //       {category.label}
+              //     </MenuItem>
+              //   ))}
+              // </TextField>
+              <FormControl
+                fullWidth
                 error={!!errors.category}
-                helperText={errors.category?.message as string}
               >
-                {categories.map((category, index) => (
-                  <MenuItem value={category.label} key={index}>
-                    <ListItemIcon>
-                      {category.icon}
-                    </ListItemIcon>
-                    {category.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+                <InputLabel id="cateory-select-label">カテゴリ</InputLabel>
+                <Select
+                  {...field}
+                  labelId="cateory-select-label"
+                  id="cateory-select"
+                  label="カテゴリ"
+                >
+                  {categories.map((category, index) => (
+                    <MenuItem value={category.label} key={index}>
+                      <ListItemIcon>
+                        {category.icon}
+                      </ListItemIcon>
+                      {category.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <FormHelperText>{errors.category?.message as string}</FormHelperText>
+              </FormControl>
             )}
           />
           {/* 金額 */}
