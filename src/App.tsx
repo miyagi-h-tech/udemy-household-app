@@ -90,13 +90,22 @@ function App() {
   }
 
   // 取引を削除する
-  const handleDeleteTransaction = async (transactionId: string) => {
+  const handleDeleteTransaction = async (
+    transactionIds: string | readonly string[]
+  ) => {
     // firestoreのデータ削除
     try {
-      await deleteDoc(doc(db, "Transactions", transactionId));
-      // 削除したID以外の取引データを抽出
-      const filterdTransactions = transactions.filter((transaction) => transaction.id !== transactionId);
+      const idsToDelete = Array.isArray(transactionIds) ? transactionIds : [transactionIds];
 
+      for (const id of idsToDelete) {
+        await deleteDoc(doc(db, "Transactions", id));
+      }
+
+      // 削除したID以外の取引データを抽出
+      // const filterdTransactions = transactions.filter((transaction) => transaction.id !== transactionId);
+      const filterdTransactions = transactions.filter(
+        (transaction) => !idsToDelete.includes(transaction.id)
+        );
       // 格納
       setTransactions(filterdTransactions);
     } catch (err) {
@@ -156,6 +165,7 @@ function App() {
                   setCurrentMonth={setCurrentMonth}
                   monthlyTransactions={monthlyTransactions}
                   isLoading={isLoading}
+                  onDeleteTransaction={handleDeleteTransaction}
                 />} />
             <Route path="*" element={<NoMatch />}></Route>
           </Route>
